@@ -5,8 +5,14 @@ const Context = React.createContext();
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case "ADD_COMMAND": return{
-            commands: [action.payload, ...state.commands]
+        case 'ADD_COMMAND': return{
+            commands: [...state.commands, action.payload]
+        };
+        case 'DELETE_COMMAND': return{
+            commands: state.commands.filter((cmd)=>cmd.reference!==action.payload) 
+        };
+        case 'PAY_COMMAND': return{
+            commands: state.commands.map((cmd)=>(cmd.reference===action.payload.reference)?(cmd=action.payload):cmd) 
         };
         default: return state;
     }

@@ -10,6 +10,7 @@ class CommandCreate extends Component{
         url: "http://localhost:8099/commande-api-v1/commandes/",
         reference: "",
         total: 0,
+        totalPaiement:0,
         commandItems: [],
         ref: "",
         quantity: 0,
@@ -49,10 +50,6 @@ class CommandCreate extends Component{
             quantity,
             price
         };
-        /*dispatch({
-            type: "ADD_COMMAND",
-            payload: newCommandItem,
-        })*/
         this.setState({
             commandItems: [...this.state.commandItems, newCommandItem],
             ref: "",
@@ -66,7 +63,7 @@ class CommandCreate extends Component{
 
     onSubmitCommand = async (dispatch, e) => {
         e.preventDefault();
-        const { reference, total, commandItems } = this.state;
+        const { reference, total, totalPaiement, commandItems } = this.state;
 
         if (commandItems.length===0){
             this.setState({errors:{commandItem:"The list of command items can't be empty"}});
@@ -75,6 +72,7 @@ class CommandCreate extends Component{
         const command={
             reference,
             total,
+            totalPaiement,
             commandItems
         };
         
@@ -97,12 +95,6 @@ class CommandCreate extends Component{
                     payload: command
                 })
                 this.props.history.push("/");
-            } else {
-                swalWithBootstrapButtons.fire(
-                    'Ops!',
-                    'Command alreday exists',
-                    'error'
-                )
             }
         } catch (error) {
             console.log(error)
