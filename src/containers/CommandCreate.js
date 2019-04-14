@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Consumer } from "../Controller/context";
-import Input from "./Partials/Input";
+import Input from "../components/Partials/Input";
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { connect } from "react-redux";
+import { addCommand } from "../actions/commandActions";
 
 class CommandCreate extends Component{
 
@@ -24,7 +25,7 @@ class CommandCreate extends Component{
         })
     };
 
-    onAddCommandItem = (dispatch, e) => {
+    onAddCommandItem = (e) => {
         e.preventDefault();
         let {reference, ref, price, quantity } = this.state;
         price=parseInt(price);
@@ -61,7 +62,7 @@ class CommandCreate extends Component{
 
     };
 
-    onSubmitCommand = async (dispatch, e) => {
+    onSubmitCommand = async (e) => {
         e.preventDefault();
         const { reference, total, totalPaiement, commandItems } = this.state;
 
@@ -90,10 +91,7 @@ class CommandCreate extends Component{
                     'Your file has been saved.',
                     'success'
                 );
-                dispatch({
-                    type: 'ADD_COMMAND',
-                    payload: command
-                })
+                this.props.addCommand(command);
                 this.props.history.push("/");
             }
         } catch (error) {
@@ -104,13 +102,10 @@ class CommandCreate extends Component{
     render() {
         const { reference, total, ref, quantity, price, errors, commandItems }=this.state;
         return(
-            <Consumer>
-                {value => {
-                    const { dispatch } = value;
-                    return(
+            <React.Fragment>
                         <div className="container">
                             <div className="col-md-12 row">
-                                <form onSubmit={this.onAddCommandItem.bind(this, dispatch)} className="col-md-6">
+                                <form onSubmit={this.onAddCommandItem} className="col-md-6">
                                     <div className="card mt-2">
                                         <div className="card-header">
                                             Command
@@ -132,7 +127,7 @@ class CommandCreate extends Component{
                                         </div>
                                     </div>
                                 </form>
-                                <form onSubmit={this.onSubmitCommand.bind(this, dispatch)} className="col-md-6">
+                                <form onSubmit={this.onSubmitCommand} className="col-md-6">
                                     <table className="table table-hover table-sm mt-2">
                                         <thead>
                                         <tr>
@@ -155,10 +150,22 @@ class CommandCreate extends Component{
                                 </form>
                             </div>
                         </div>
-                    )
-                }}
-            </Consumer>
+            </React.Fragment>
         )
     }
 }
-export default CommandCreate;
+const mapStateToProps = (state) => {
+    return{
+        commandItems: state.command.commandItems
+    }
+}
+
+const mapDispatchToProps = (dispatch) =>{
+    return{
+        addCommand : (command) =>{
+            dispatch(addCommand(command))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (CommandCreate);

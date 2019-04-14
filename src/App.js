@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import CommandCreate from "./Components/Commande/CommandCreate";
-import { Provider } from "./Components/Controller/context"
-import Navbar from './Components/Navbar';
-import CommandeList from './Components/Commande/CommandeList';
-import PageNotFound from './Components/Commande/pages/PageNotFound';
-import About from './Components/Commande/pages/About';
+import CommandCreate from "./containers/CommandCreate";
+import { Provider } from "react-redux"
+import Navbar from './components/Navbar';
+import CommandeList from './containers/CommandeList';
+import PageNotFound from './components/pages/PageNotFound';
+import About from './components/pages/About';
+import commandStore from './store/commandStore';
 class App extends Component {
   render() {
     return (
-        <Provider>
+        <Provider store={commandStore}>
           <Router>
             <div className="App">
               <Navbar />
